@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather to day</title>
+</head>
+
+<body>
+    <form action="/getTempLatLong" method="post">
+    <h1>
+        <button onclick="getLocation()">Location Me</button>
+    </h1>
+    </form>
+    <div id="demo">  </div>
+
+    <script>
+        var x = document.getElementById("demo");
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+              
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            console.log(position.coords.latitude);
+            console.log(position.coords.longitude);
+            callApiGetTempLatLog(position.coords.latitude, position.coords.longitude);
+        }
+
+        const callApiGetTempLatLog = (lat, lon) => {
+            const data = fetch(`http://localhost:3000/getTempLatLong?lat=${lat}&lon=${lon}`)
+            .then(response => response.text())
+            .then(text => {
+              const demo = document.getElementById('demo')
+              demo.innerHTML = text
+            });
+
+        }
+    </script>
+   
+
+</body>
+
+</html>
