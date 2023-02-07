@@ -1,50 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather to day</title>
-</head>
-
-<body>
-    <form action="/getTempLatLong" method="post">
-    <h1>
-        <button onclick="getLocation()">Location Me</button>
-    </h1>
-    </form>
-    <div id="demo">  </div>
-
+    <title>อากาศวันนี้เป็นอย่างไร ? How is weather today ?</title>
     <script>
-        var x = document.getElementById("demo");
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-              
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
+        navigator.geolocation.getCurrentPosition ((success, error, options)=>{
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position)=>{
+            document.getElementById("latInput").value = position.coords.latitude;
+            document.getElementById("lonInput").value = position.coords.longitude;
+          });
 
-        function showPosition(position) {
-            console.log(position.coords.latitude);
-            console.log(position.coords.longitude);
-            callApiGetTempLatLog(position.coords.latitude, position.coords.longitude);
-        }
-
-        const callApiGetTempLatLog = (lat, lon) => {
-            const data = fetch(`http://localhost:3000/getTempLatLong?lat=${lat}&lon=${lon}`)
-            .then(response => response.text())
-            .then(text => {
-              const demo = document.getElementById('demo')
-              demo.innerHTML = text
-            });
-
-        }
+      }
+    })
     </script>
+</head>
+<body">
+ 
+    <form action="/displaytemp" method="post">
+        <label for="">โปรดใส่เมืองที่คุณต้องการทราบสภาพอากาศ:</label>
+        <input type="text" name="cityName" id="cityInput">
+        <button type="submit">Go!</button>
+    </form>
+
+    <form action="/displaytempbylatlon" method="post">
+      <label for="">Lat, Lon</label>
+      <input type="text" name="lat" id="latInput">
+      <input type="text" name="lon" id="lonInput">
+      <button type="submit">Go!</button>
+  </form>
    
 
 </body>
-
 </html>
